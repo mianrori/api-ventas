@@ -86,9 +86,3 @@ app.use(errorHandler);
 app.listen(process.env.PORT, () => {
   console.log("Server API-VENTAS running on port " + process.env.PORT);
 });
-
-//Un cambio que hice
-//Otro comentario
-//Más comentario
-//Y otro comentario
-console.log("Hello Monday. Is very very very good!!!");
