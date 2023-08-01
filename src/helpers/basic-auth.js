@@ -23,6 +23,20 @@ export const basicAuth = async (req, res, next) => {
         messages: ["Credenciales de autenticación no válidas"],
       });
     }
+    /**Modo Test */
+    if (process.env.PORT === "4897" && user.modoTest === "N") {
+      return res.status(401).json({
+        success: false,
+        messages: ["No tiene habilitado el modo Test"],
+      });
+    }
+    /**Modo Producción */
+    if (process.env.PORT === "4898" && user.modoProduccion === "N") {
+      return res.status(401).json({
+        success: false,
+        messages: ["No tiene habilitado el modo Producción"],
+      });
+    }
     req.user = user;
   } catch (error) {
     console.log(error);

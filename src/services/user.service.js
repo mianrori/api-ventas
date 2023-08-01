@@ -7,6 +7,8 @@ export const authenticate = async (db, userName, password) => {
       id: user["ID"],
       idCliente: user["COD_CLIENTE"],
       idLocal: user["COD_GRUPO_LOCAL"],
+      modoTest: user["MODO_TEST"],
+      modoProduccion: user["MODO_PRODUCCION"],
     };
   }
 };
