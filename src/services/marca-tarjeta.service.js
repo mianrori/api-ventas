@@ -6,7 +6,10 @@ export const getMarcasTarjetasService = async (db) => {
     const marcasTarjetas = await getMarcasTarjetas(db);
     if (marcasTarjetas) {
       for (let i = 0; i < marcasTarjetas.length; i++) {
-        result.push(`${marcasTarjetas[i]["ID"]}`);
+        result.push({
+          id: marcasTarjetas[i]["ID"],
+          descripcion: marcasTarjetas[i]["DESCRIPCION"],
+        });
       }
     }
   } catch (error) {

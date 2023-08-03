@@ -232,7 +232,7 @@ export const dataStructure = (
           minSize: 1,
           maxSize: 10,
           size: 10,
-          value: tiposFormasCobros,
+          value: valuesOfTiposFormasCobros(tiposFormasCobros),
           required: true,
         },
         idMarcaTarjeta: {
@@ -240,16 +240,20 @@ export const dataStructure = (
           minSize: 1,
           maxSize: 10,
           size: 10,
-          value: marcasTarjetas,
-          required: false,
+          value: valuesOfMarcasTarjetas(marcasTarjetas),
+          required:
+            index !== undefined &&
+            isRequiredMarcaTarjeta(tiposFormasCobros, data[index].idTipo),
         },
         idEntidad: {
           type: "number",
           minSize: 1,
           maxSize: 10,
           size: 10,
-          value: entidades,
-          required: false,
+          value: valuesOfEntidades(entidades),
+          required:
+            index !== undefined &&
+            isRequiredEntidad(tiposFormasCobros, data[index].idTipo),
         },
         idMoneda: {
           type: "string",
@@ -277,6 +281,59 @@ export const dataStructure = (
     },
   };
   return obj;
+};
+
+const isRequiredMarcaTarjeta = (tiposFormasCobros, id) => {
+  let result = false;
+  if (id !== undefined) {
+    for (let i = 0; i < tiposFormasCobros.length; i++) {
+      if (
+        tiposFormasCobros[i].id === id &&
+        tiposFormasCobros[i].requiereMarca === "S"
+      ) {
+        result = true;
+      }
+    }
+  }
+  return result;
+};
+const isRequiredEntidad = (tiposFormasCobros, id) => {
+  let result = false;
+  if (id !== undefined) {
+    for (let i = 0; i < tiposFormasCobros.length; i++) {
+      if (
+        tiposFormasCobros[i].id === id &&
+        tiposFormasCobros[i].requiereEntidad === "S"
+      ) {
+        result = true;
+      }
+    }
+  }
+  return result;
+};
+
+const valuesOfTiposFormasCobros = (tiposFormasCobros) => {
+  let value = [];
+  for (let i = 0; i < tiposFormasCobros.length; i++) {
+    value.push(tiposFormasCobros[i].id);
+  }
+  return value;
+};
+
+const valuesOfEntidades = (entidades) => {
+  let value = [];
+  for (let i = 0; i < entidades.length; i++) {
+    value.push(entidades[i].id);
+  }
+  return value;
+};
+
+const valuesOfMarcasTarjetas = (marcasTarjetas) => {
+  let value = [];
+  for (let i = 0; i < marcasTarjetas.length; i++) {
+    value.push(marcasTarjetas[i].id);
+  }
+  return value;
 };
 
 export default { dataStructure };

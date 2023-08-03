@@ -21,23 +21,24 @@ export const validateData = async (
     errors.push(
       `El comprobante ${data.idTipoComprobante}: ${data.nroComprobante} con timbrado ${data.timbrado} ya existe.`
     );
+  } else {
+    const structure = dataStructure(
+      monedas,
+      tiposFormasCobros,
+      marcasTarjetas,
+      entidades,
+      data
+    );
+    analyzeData(
+      data,
+      structure,
+      monedas,
+      tiposFormasCobros,
+      marcasTarjetas,
+      entidades,
+      errors
+    );
   }
-  const structure = dataStructure(
-    monedas,
-    tiposFormasCobros,
-    marcasTarjetas,
-    entidades,
-    data
-  );
-  analyzeData(
-    data,
-    structure,
-    monedas,
-    tiposFormasCobros,
-    marcasTarjetas,
-    entidades,
-    errors
-  );
   return errors;
 };
 
@@ -61,7 +62,7 @@ export const toProcessData = (
     if (
       data.hasOwnProperty(key) &&
       attr.hasOwnProperty("value") &&
-      !attr.value.includes(data[key].toString())
+      !attr.value.includes(data[key])
     ) {
       errors.push(
         `El valor que contiene el atributo${

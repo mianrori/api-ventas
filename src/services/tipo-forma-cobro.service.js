@@ -6,7 +6,13 @@ export const getTiposFormasCobrosService = async (db) => {
     const tiposFormasCobros = await getTiposFormasCobros(db);
     if (tiposFormasCobros) {
       for (let i = 0; i < tiposFormasCobros.length; i++) {
-        result.push(`${tiposFormasCobros[i]["ID"]}`);
+        //result.push(`${tiposFormasCobros[i]["ID"]}`);
+        result.push({
+          id: tiposFormasCobros[i]["ID"],
+          descripcion: tiposFormasCobros[i]["DESCRIPCION"],
+          requiereEntidad: tiposFormasCobros[i]["REQUIERE_ENTIDAD"],
+          requiereMarca: tiposFormasCobros[i]["REQUIERE_MARCA"],
+        });
       }
     }
   } catch (error) {

@@ -6,7 +6,10 @@ export const getEntidadesService = async (db) => {
     const entidades = await getEntidades(db);
     if (entidades) {
       for (let i = 0; i < entidades.length; i++) {
-        result.push(`${entidades[i]["ID"]}`);
+        result.push({
+          id: entidades[i]["ID"],
+          descripcion: entidades[i]["DESCRIPCION"],
+        });
       }
     }
   } catch (error) {
