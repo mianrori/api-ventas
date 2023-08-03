@@ -538,6 +538,7 @@ export const updateEstadoTransaccion = (
   db,
   idTransaccion,
   estado,
+  fechaEstado,
   idUsuario,
   idCliente,
   idLocal
@@ -551,41 +552,52 @@ export const updateEstadoTransaccion = (
         );
         return;
       }
-      const result = await db.execute(
-        `UPDATE iv_transaccion_cabecera a
-                               SET a.estado=:estado
-                               WHERE a.id=:idTransaccion
-                                 AND a.id_usuario=:idUsuario
-                               RETURN id,ruc_ci,fecha_hora,id_moneda,id_tipo_comprobante,id_condicion_venta,nro_comprobante,exenta,gravada_5,gravada_10
-                               INTO :id,:rucCi,:fechaHora,:idMoneda,:idTipoComprobante,:idCondicionVenta,:nroComprobante,:exenta,:gravada5,:gravada10`,
-        {
-          id: { type: oracledb.NUMBER, dir: oracledb.BIND_OUT },
-          rucCi: { type: oracledb.STRING, dir: oracledb.BIND_OUT },
-          fechaHora: { type: oracledb.DATE, dir: oracledb.BIND_OUT },
-          idMoneda: { type: oracledb.STRING, dir: oracledb.BIND_OUT },
-          idTipoComprobante: { type: oracledb.STRING, dir: oracledb.BIND_OUT },
-          idCondicionVenta: { type: oracledb.STRING, dir: oracledb.BIND_OUT },
-          nroComprobante: { type: oracledb.STRING, dir: oracledb.BIND_OUT },
-          exenta: { type: oracledb.NUMBER, dir: oracledb.BIND_OUT },
-          gravada5: { type: oracledb.NUMBER, dir: oracledb.BIND_OUT },
-          gravada10: { type: oracledb.NUMBER, dir: oracledb.BIND_OUT },
-          idTransaccion: {
-            type: oracledb.NUMBER,
-            val: parseInt(idTransaccion),
-            dir: oracledb.BIND_IN,
-          },
-          estado: {
-            type: oracledb.STRING,
-            val: estado,
-            dir: oracledb.BIND_IN,
-          },
-          idUsuario: {
-            type: oracledb.NUMBER,
-            val: idUsuario,
-            dir: oracledb.BIND_IN,
-          },
-        }
-      );
+      let query;
+      if (estado === "PAG") {
+        query = `UPDATE iv_transaccion_cabecera a
+                 SET a.pagado='S',
+                     a.fecha_pagado=TO_DATE(:fechaEstado,'dd/mm/yyyy')
+                 WHERE a.id=:idTransaccion
+                   AND a.id_usuario=:idUsuario
+                 RETURN id,ruc_ci,fecha_hora,id_moneda,id_tipo_comprobante,id_condicion_venta,nro_comprobante,exenta,gravada_5,gravada_10
+                 INTO :id,:rucCi,:fechaHora,:idMoneda,:idTipoComprobante,:idCondicionVenta,:nroComprobante,:exenta,:gravada5,:gravada10`;
+      }
+      if (estado === "ANU") {
+        query = `UPDATE iv_transaccion_cabecera a
+                 SET a.anulado='S',
+                     a.fecha_anulado=TO_DATE(:fechaEstado,'dd/mm/yyyy')
+                 WHERE a.id=:idTransaccion
+                   AND a.id_usuario=:idUsuario
+                 RETURN id,ruc_ci,fecha_hora,id_moneda,id_tipo_comprobante,id_condicion_venta,nro_comprobante,exenta,gravada_5,gravada_10
+                 INTO :id,:rucCi,:fechaHora,:idMoneda,:idTipoComprobante,:idCondicionVenta,:nroComprobante,:exenta,:gravada5,:gravada10`;
+      }
+      const result = await db.execute(query, {
+        id: { type: oracledb.NUMBER, dir: oracledb.BIND_OUT },
+        rucCi: { type: oracledb.STRING, dir: oracledb.BIND_OUT },
+        fechaHora: { type: oracledb.DATE, dir: oracledb.BIND_OUT },
+        idMoneda: { type: oracledb.STRING, dir: oracledb.BIND_OUT },
+        idTipoComprobante: { type: oracledb.STRING, dir: oracledb.BIND_OUT },
+        idCondicionVenta: { type: oracledb.STRING, dir: oracledb.BIND_OUT },
+        nroComprobante: { type: oracledb.STRING, dir: oracledb.BIND_OUT },
+        exenta: { type: oracledb.NUMBER, dir: oracledb.BIND_OUT },
+        gravada5: { type: oracledb.NUMBER, dir: oracledb.BIND_OUT },
+        gravada10: { type: oracledb.NUMBER, dir: oracledb.BIND_OUT },
+        idTransaccion: {
+          type: oracledb.NUMBER,
+          val: parseInt(idTransaccion),
+          dir: oracledb.BIND_IN,
+        },
+        fechaEstado: {
+          type: oracledb.STRING,
+          val: fechaEstado,
+          dir: oracledb.BIND_IN,
+        },
+        idUsuario: {
+          type: oracledb.NUMBER,
+          val: idUsuario,
+          dir: oracledb.BIND_IN,
+        },
+      });
       db.commit();
       if (result.outBinds.id.length > 0) {
         if (

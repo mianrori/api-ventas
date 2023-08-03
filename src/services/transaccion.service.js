@@ -80,6 +80,7 @@ export const updateEstadoTransaccionService = (
         req.db,
         id,
         data.estado,
+        data.fechaEstado,
         idUsuario,
         idCliente,
         idLocal
