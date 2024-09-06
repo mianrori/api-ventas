@@ -5,6 +5,7 @@ export const authenticate = async (db, userName, password) => {
   if (user) {
     return {
       id: user["ID"],
+      userName: user["USER_NAME"],
       idCliente: user["COD_CLIENTE"],
       idLocal: user["COD_GRUPO_LOCAL"],
       modoTest: user["MODO_TEST"],

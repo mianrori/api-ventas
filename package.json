@@ -5,8 +5,8 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "dev": "set NODE_ENV=development&&set NODE_TLS_REJECT_UNAUTHORIZED=0&& nodemon index.js",
-    "prod": "set NODE_ENV=production&&set NODE_TLS_REJECT_UNAUTHORIZED=0&& nodemon index.js"
+    "dev": "set NODE_ENV=development&& nodemon index.js",
+    "prod": "set NODE_ENV=production&& node index.js"
   },
   "keywords": [],
   "author": "",
@@ -19,6 +19,7 @@
     "moment": "^2.29.4",
     "moment-timezone": "^0.5.43",
     "morgan": "^1.10.0",
+    "morgan-body": "^2.6.9",
     "oracledb": "^6.0.1"
   },
   "devDependencies": {

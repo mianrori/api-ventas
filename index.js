@@ -1,9 +1,14 @@
 /**Sin TLS */
-import "dotenv/config";
+//import "dotenv/config";
+import dotenv from "dotenv";
+import path from "path";
+import { fileURLToPath } from "url";
+import config from "./config.js";
 import express from "express";
-import morgan from "morgan";
+import morganBody from "morgan-body";
+//import morgan from "morgan";
 import cors from "cors";
-import moment from "moment-timezone";
+//import moment from "moment-timezone";
 import { basicAuth } from "./src/helpers/basic-auth.js";
 import { router } from "./src/routes/index.js";
 import { connect } from "./src/database/db.js";
@@ -13,20 +18,27 @@ import { getTiposFormasCobrosService } from "./src/services/tipo-forma-cobro.ser
 import { getMarcasTarjetasService } from "./src/services/marca-tarjeta.service.js";
 import { getEntidadesService } from "./src/services/entidad.service.js";
 
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+dotenv.config({ path: path.join(__dirname, ".env") });
+
 const app = express();
 
-morgan.token("date", (req, res, tz) => {
+morganBody(app, { maxBodyLength: 2000 });
+
+/*morgan.token("date", (req, res, tz) => {
   return moment().tz(tz).format("DD/MM/YYYY hh:mm:ss.SSSZ");
 });
 
 app.use(
   morgan("[:date[America/Asuncion]] :method :url :status :response-time ms")
-);
+);*/
 
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 app.use(cors());
 
+/**Database */
 let connection;
 try {
   connection = await connect();
@@ -38,10 +50,10 @@ process.on("SIGINT", async () => {
   await connection.close((err) => {
     if (err)
       console.log(
-        `Error connecting to ${process.env.DB_SID} database: ${err.message}.`
+        `Error connecting to ${config.dbSid} database: ${err.message}.`
       );
   });
-  console.log(`${process.env.DB_SID} database has been disconnected.`);
+  console.log(`${config.dbSid} database has been disconnected.`);
   process.exit(0);
 });
 
@@ -84,8 +96,10 @@ app.use("*", function (req, res) {
 });
 app.use(errorHandler);
 
-app.listen(process.env.PORT, () => {
-  console.log("Server API-VENTAS running on port " + process.env.PORT);
+app.listen(config.port, () => {
+  console.log(
+    `Server API-VENTAS running on port ${config.port} in mode ${process.env.NODE_ENV}`
+  );
 });
 
 /**Con TLS */
