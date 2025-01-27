@@ -89,6 +89,7 @@ app.use(async (req, res, next) => {
 app.use("/delsol/api", basicAuth, router);
 app.use("*", function (req, res) {
   res.status(404).json({
+    env: process.env.NODE_ENV,
     success: false,
     idTransaccion: 0,
     messages: ["Solicitud incorrecta."],

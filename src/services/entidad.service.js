@@ -1,7 +1,7 @@
 import { getEntidades } from "../database/entidad.database.js";
 
 export const getEntidadesService = async (db) => {
-  let result = [];
+  let result = [{ id: 0, descripcion: "" }];
   try {
     const entidades = await getEntidades(db);
     if (entidades) {

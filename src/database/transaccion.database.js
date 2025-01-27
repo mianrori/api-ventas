@@ -17,7 +17,8 @@ const insertIvTransaccionCabecera = (
   exenta,
   gravada5,
   gravada10,
-  idUsuario
+  idUsuario,
+  cdc
 ) => {
   return new Promise(async (resolve, reject) => {
     try {
@@ -37,7 +38,8 @@ const insertIvTransaccionCabecera = (
                                              gravada_5,
                                              gravada_10,
                                              id_usuario,
-                                             fecha_alta) 
+                                             fecha_alta,
+                                             cdc) 
                                       VALUES(sq_iv_transaccion_cabecera.nextval,
                                              UPPER(:idTipoComprobante),
                                              UPPER(:idCondicionVenta),
@@ -53,7 +55,8 @@ const insertIvTransaccionCabecera = (
                                              ABS(:gravada5),
                                              ABS(:gravada10),
                                              :idUsuario,
-                                             SYSDATE) 
+                                             SYSDATE,
+                                             :cdc) 
                                       RETURN id INTO :id`,
         {
           id: { type: oracledb.NUMBER, dir: oracledb.BIND_OUT },
@@ -125,6 +128,11 @@ const insertIvTransaccionCabecera = (
           idUsuario: {
             type: oracledb.NUMBER,
             val: idUsuario,
+            dir: oracledb.BIND_IN,
+          },
+          cdc: {
+            type: oracledb.STRING,
+            val: cdc,
             dir: oracledb.BIND_IN,
           },
         }
@@ -323,8 +331,8 @@ const insertIvFormaCobro = (
                                     id_cabecera)
                              VALUES(sq_iv_forma_cobro.nextval,
                                     :idTipo,
-                                    :idMarcaTarjeta,
-                                    :idEntidad,
+                                    DECODE(:idMarcaTarjeta,0,NULL),
+                                    DECODE(:idEntidad,0,NULL),
                                     :idMoneda,
                                     ABS(:tipoCambio),
                                     ABS(:monto),
@@ -401,6 +409,7 @@ export const insertTransaccion = (db, idUser, data) => {
       gravada10,
       items,
       formasCobros,
+      cdc,
     } = data;
     try {
       const idCabecera = await insertIvTransaccionCabecera(
@@ -418,7 +427,8 @@ export const insertTransaccion = (db, idUser, data) => {
         exenta,
         gravada5,
         gravada10,
-        idUser
+        idUser,
+        cdc
       );
       if (idCabecera) {
         for (const item of items) {

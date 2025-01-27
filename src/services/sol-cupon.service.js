@@ -32,6 +32,7 @@ export const solCuponService = (
           },
         ],
       };
+      console.log(`Payload sol/cupón: ${JSON.stringify(payload)}`);
       const result = await db.execute(
         `BEGIN
             pro_crud_cupon(:payload,:response);
@@ -42,10 +43,14 @@ export const solCuponService = (
             val: JSON.stringify(payload),
             type: oracledb.STRING,
           },
-          response: { dir: oracledb.BIND_OUT, type: oracledb.STRING },
+          response: {
+            dir: oracledb.BIND_OUT,
+            type: oracledb.STRING,
+            maxSize: 32767,
+          },
         }
       );
-      let response = JSON.parse(result.outBinds.response);
+      let response = JSON.parse(result.outBinds.response.replace(/[\r]/g, ""));
       if (response.hasOwnProperty("factura") && response.factura.length === 0) {
         await changeProcesadoSsTransaccion(db, idTransaccion, "S");
       }

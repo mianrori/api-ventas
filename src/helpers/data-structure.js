@@ -110,7 +110,7 @@ export const dataStructure = (
     },
     items: {
       type: "array",
-      required: true,
+      required: false,
       props: {
         idArticulo: {
           type: "string",

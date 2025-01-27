@@ -1,7 +1,7 @@
 import { getMarcasTarjetas } from "../database/marca-tarjeta.database.js";
 
 export const getMarcasTarjetasService = async (db) => {
-  let result = [];
+  let result = [{ id: 0, descripcion: "" }];
   try {
     const marcasTarjetas = await getMarcasTarjetas(db);
     if (marcasTarjetas) {
