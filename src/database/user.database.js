@@ -5,7 +5,8 @@ export const getUser = (db, userName, password) => {
         `SELECT *
             FROM iv_usuario_local a
             WHERE a.user_name=:userName
-              AND a.password=:password`,
+              AND a.password=:password
+              AND NVL(a.activo,'N')='S'`,
         [userName, password]
       );
       if (result.rows.length === 0) {
