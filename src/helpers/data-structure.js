@@ -70,7 +70,7 @@ export const dataStructure = (
       size: 10,
       required: true,
       format: "dd/mm/yyyy",
-      pattern: /^(0[1-9]|[1-2][0-9]|3[01])\/(0[1-9]|1[0-2])\/20[2-9][0-9]$/g,
+      //pattern: /^(0[1-9]|[1-2][0-9]|3[01])\/(0[1-9]|1[0-2])\/20[2-9][0-9]$/g,
     },
     idMoneda: {
       type: "string",
