@@ -5,6 +5,7 @@ import {
   updateEstadoTransaccion,
 } from "../database/transaccion.database.js";
 import { solCuponService } from "./sol-cupon.service.js";
+import { generaDocumentoAlternativoService } from "./genera-documento-alternativo.service.js";
 
 export const insertTransaccionService = (
   req,
@@ -32,6 +33,7 @@ export const insertTransaccionService = (
           data.idTipoComprobante === "FAC" &&
           data.idCondicionVenta === "CON"
         ) {
+          generaDocumentoAlternativoService(req.db, data.rucCi);
           solCuponService(req.db, idTransaccion, idCliente, idLocal, data);
         }
         resolve(idTransaccion);
