@@ -331,8 +331,8 @@ const insertIvFormaCobro = (
                                     id_cabecera)
                              VALUES(sq_iv_forma_cobro.nextval,
                                     :idTipo,
-                                    DECODE(:idMarcaTarjeta,0,NULL),
-                                    DECODE(:idEntidad,0,NULL),
+                                    DECODE(:idMarcaTarjeta,0,NULL,:idMarcaTarjeta),
+                                    DECODE(:idEntidad,0,NULL,:idEntidad),
                                     :idMoneda,
                                     ABS(:tipoCambio),
                                     ABS(:monto),
