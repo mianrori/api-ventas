@@ -6,6 +6,7 @@ import {
 } from "../database/transaccion.database.js";
 import { solCuponService } from "./sol-cupon.service.js";
 import { generaDocumentoAlternativoService } from "./genera-documento-alternativo.service.js";
+import { getTransaccionByTipoComprobanteNumeroComprobanteAndTimbrado } from "../database/transaccion.database.js";
 
 export const insertTransaccionService = (
   req,
@@ -25,7 +26,18 @@ export const insertTransaccionService = (
         data
       );
       if (errors.length > 0) {
-        reject(errors);
+        let idTransaccion;
+        let existsComprobante =
+          await getTransaccionByTipoComprobanteNumeroComprobanteAndTimbrado(
+            req.db,
+            data.idTipoComprobante,
+            data.nroComprobante,
+            data.timbrado
+          );
+        if (existsComprobante) {
+          idTransaccion = existsComprobante[0]["ID"];
+        }
+        reject({ idTransaccion, message: errors });
       } else {
         const idTransaccion = await insertTransaccion(req.db, idUser, data);
         if (

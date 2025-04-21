@@ -31,8 +31,8 @@ export const insertTransaccionController = async (req, res) => {
     res.status(422).json({
       env: process.env.NODE_ENV,
       success: false,
-      idTransaccion: 0,
-      messages: [error],
+      idTransaccion: error.idTransaccion || 0,
+      messages: [error.message],
     });
   }
 };
