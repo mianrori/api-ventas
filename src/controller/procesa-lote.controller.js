@@ -29,4 +29,6 @@ export const procesaLoteController = async (req, res) => {
   }
 };
 
+//Nuevo endpoint
+
 export default procesaLoteController;
